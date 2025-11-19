@@ -1,32 +1,46 @@
-import { JSX } from "react";
+import React, { JSX } from "react";
 import {
     BrowserRouter as Router,
     Routes,
     Route,
     Navigate,
+    useLocation,
 } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import Navbar from "../components/Navbar";
+
 import Login from "../pages/Login";
 import AdminDashboard from "../pages/Admin/Dashboard";
 import AgentDashboard from "../pages/Agent/Dashboard";
 import UserDashboard from "../pages/User/Dashboard";
+import { useAuth } from "../context/AuthContext";
 
-const ProtectedRoute = ({
+// Optionnel : route protégée
+function ProtectedRoute({
     children,
     roles,
 }: {
     children: JSX.Element;
     roles: string[];
-}) => {
+}) {
     const { user } = useAuth();
-    if (!user) return <Navigate to="/login" />;
-    if (!roles.includes(user.role)) return <Navigate to="/login" />;
+    if (!user || (roles && !roles.includes(user.role)))
+        return <Navigate to="/login" />;
     return children;
-};
-
+}
 export default function AppRouter() {
     return (
         <Router>
+            <Content />
+        </Router>
+    );
+}
+
+function Content() {
+    const location = useLocation();
+
+    return (
+        <>
+            {location.pathname !== "/login" && <Navbar />}
             <Routes>
                 <Route path="/login" element={<Login />} />
                 <Route
@@ -55,6 +69,6 @@ export default function AppRouter() {
                 />
                 <Route path="*" element={<Navigate to="/login" />} />
             </Routes>
-        </Router>
+        </>
     );
 }
