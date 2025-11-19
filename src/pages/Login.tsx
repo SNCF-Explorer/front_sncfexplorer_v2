@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import "../styles/Login.css";
 
 export default function Login() {
     const [username, setUsername] = useState("");
@@ -26,7 +27,6 @@ export default function Login() {
             const data = await res.json();
             login(data.token);
 
-            // Redirige selon le rôle
             switch (data.role) {
                 case "admin":
                     navigate("/admin/dashboard");
@@ -38,39 +38,37 @@ export default function Login() {
                     navigate("/user/dashboard");
                     break;
             }
-        } catch (err) {
+        } catch {
             setError("Erreur serveur");
         }
     };
 
     return (
-        <div className="flex justify-center items-center h-screen">
-            <form
-                onSubmit={handleSubmit}
-                className="flex flex-col p-6 border rounded"
-            >
-                <h2 className="text-xl font-bold mb-4">Connexion</h2>
+        <div className="login-container">
+            <form onSubmit={handleSubmit} className="login-form">
+                <h2 className="login-title">Connexion</h2>
+
                 <input
                     type="text"
-                    placeholder="Username"
+                    placeholder="Nom d'utilisateur"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
-                    className="mb-2 p-2 border rounded"
+                    className="login-input"
                 />
+
                 <input
                     type="password"
-                    placeholder="Password"
+                    placeholder="Mot de passe"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="mb-2 p-2 border rounded"
+                    className="login-input"
                 />
-                <button
-                    type="submit"
-                    className="bg-blue-500 text-white p-2 rounded"
-                >
+
+                <button type="submit" className="login-button">
                     Se connecter
                 </button>
-                {error && <p className="text-red-500 mt-2">{error}</p>}
+
+                {error && <p className="login-error">{error}</p>}
             </form>
         </div>
     );

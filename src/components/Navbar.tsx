@@ -1,6 +1,7 @@
 import React from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import "../styles/Navbar.css";
 
 export default function Navbar() {
     const { user, logout } = useAuth();
@@ -12,13 +13,10 @@ export default function Navbar() {
     };
 
     return (
-        <nav className="p-4 flex justify-between items-center bg-gray-200">
-            <div className="logo font-bold">LOGO</div>
+        <nav className="navbar">
+            <div className="logo ">LOGO</div>
             {user && (
-                <button
-                    onClick={handleLogout}
-                    className="bg-red-500 text-white px-3 py-1 rounded"
-                >
+                <button onClick={handleLogout} className="logoff_button">
                     Déconnexion
                 </button>
             )}

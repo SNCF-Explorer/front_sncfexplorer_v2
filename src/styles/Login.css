@@ -1,0 +1,67 @@
+/* --- CONTAINER FULLSCREEN --- */
+.login-container {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgb(151, 151, 151);
+    font-family: Arial, sans-serif;
+}
+
+/* --- FORM CARD --- */
+.login-form {
+    background: rgb(212, 212, 212);
+    padding: 40px;
+    width: 350px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- TITLE --- */
+.login-title {
+    font-size: 26px;
+    font-weight: bold;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+/* --- INPUTS --- */
+.login-input {
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #d0d4d8;
+    border-radius: 8px;
+    font-size: 15px;
+    transition: 0.2s;
+}
+
+.login-input:focus {
+    border-color: #5b8def;
+    outline: none;
+    box-shadow: 0 0 5px rgba(91, 141, 239, 0.4);
+}
+
+/* --- BUTTON --- */
+.login-button {
+    padding: 12px;
+    background: #4f73ff;
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.login-button:hover {
+    background: #3c5ce0;
+}
+
+/* --- ERROR TEXT --- */
+.login-error {
+    margin-top: 10px;
+    color: #e63946;
+    text-align: center;
+}

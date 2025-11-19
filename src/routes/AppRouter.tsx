@@ -1,4 +1,3 @@
-import React, { JSX } from "react";
 import {
     BrowserRouter as Router,
     Routes,
@@ -6,69 +5,63 @@ import {
     Navigate,
     useLocation,
 } from "react-router-dom";
-import Navbar from "../components/Navbar";
 
-import Login from "../pages/Login";
-import AdminDashboard from "../pages/Admin/Dashboard";
-import AgentDashboard from "../pages/Agent/Dashboard";
-import UserDashboard from "../pages/User/Dashboard";
+import { routes } from "./routeConfig";
 import { useAuth } from "../context/AuthContext";
+import Login from "../pages/Login";
+import Navbar from "../components/Navbar";
+import { JSX } from "react";
 
-// Optionnel : route protégée
 function ProtectedRoute({
     children,
     roles,
 }: {
     children: JSX.Element;
-    roles: string[];
+    roles?: string[];
 }) {
     const { user } = useAuth();
-    if (!user || (roles && !roles.includes(user.role)))
+
+    if (!user) return <Navigate to="/login" />;
+
+    // Si la route nécessite un rôle
+    if (roles && !roles.includes(user.role)) {
         return <Navigate to="/login" />;
+    }
+
     return children;
 }
+
+function Layout() {
+    const location = useLocation();
+    const hideNavbar = location.pathname === "/login";
+
+    return <>{!hideNavbar && <Navbar />}</>;
+}
+
 export default function AppRouter() {
     return (
         <Router>
-            <Content />
-        </Router>
-    );
-}
-
-function Content() {
-    const location = useLocation();
-
-    return (
-        <>
-            {location.pathname !== "/login" && <Navbar />}
+            <Layout />
             <Routes>
+                {/* Route publique */}
                 <Route path="/login" element={<Login />} />
-                <Route
-                    path="/admin/dashboard"
-                    element={
-                        <ProtectedRoute roles={["admin"]}>
-                            <AdminDashboard />
-                        </ProtectedRoute>
-                    }
-                />
-                <Route
-                    path="/agent/dashboard"
-                    element={
-                        <ProtectedRoute roles={["agent"]}>
-                            <AgentDashboard />
-                        </ProtectedRoute>
-                    }
-                />
-                <Route
-                    path="/user/dashboard"
-                    element={
-                        <ProtectedRoute roles={["user"]}>
-                            <UserDashboard />
-                        </ProtectedRoute>
-                    }
-                />
+
+                {/* Toutes les routes protégées AUTOMATIQUEMENT */}
+                {routes.map((r) => (
+                    <Route
+                        key={r.path}
+                        path={r.path}
+                        element={
+                            <ProtectedRoute roles={r.roles}>
+                                <r.element />
+                            </ProtectedRoute>
+                        }
+                    />
+                ))}
+
+                {/* Default */}
                 <Route path="*" element={<Navigate to="/login" />} />
             </Routes>
-        </>
+        </Router>
     );
 }
