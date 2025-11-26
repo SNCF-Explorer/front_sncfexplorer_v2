@@ -1,4 +1,4 @@
-import React, { JSX } from "react";
+import React, { JSX, useState } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
@@ -30,33 +30,80 @@ const MapElements: MapElement[] = [
         position: [48.81, 2.37],
     },
     {
-        id: 1,
+        id: 2,
         type: "signal",
         subtype: "arret",
-        name: "Signal A",
+        name: "Signal B",
         position: [48.8, 2.36],
     },
     {
-        id: 1,
+        id: 3,
         type: "signal",
         subtype: "f",
-        name: "Signal A",
+        name: "Signal C",
         position: [48.79, 2.35],
     },
-    { id: 2, type: "gare", name: "Gare B", position: [48.85, 2.38] },
-    { id: 3, type: "pn", name: "Passage à niveau C", position: [48.83, 2.36] },
+    { id: 4, type: "gare", name: "Gare B", position: [48.85, 2.38] },
+    { id: 5, type: "pn", name: "Passage à niveau C", position: [48.83, 2.36] },
 ];
 
 export default function AgentMap(): JSX.Element {
     const center: [number, number] = [48.8566, 2.3522];
 
+    // MENU DYNAMIQUE
+    //! Deprecated -> Voir Structure.js pour comprendre
+    const [menus] = useState([
+        {
+            id: "main",
+            title: "Menu principal",
+            items: ["Actions", "Filtres", "Configuration"],
+        },
+        {
+            id: "actions",
+            title: "Actions",
+            items: ["Ajouter", "Supprimer", "Déplacer"],
+        },
+        { id: "filters", title: "Filtres", items: ["Signaux", "PN", "Gares"] },
+        {
+            id: "config",
+            title: "Configuration",
+            items: ["Couche", "Affichage", "Préférences"],
+        },
+    ]);
+
+    // Menu affiché
+    const [currentMenu, setCurrentMenu] = useState("main");
+
+    const openMenu = (id: string) => {
+        setCurrentMenu(id);
+    };
+
+    const goBack = () => {
+        setCurrentMenu("main");
+    };
+
+    const activeMenu = menus.find((m) => m.id === currentMenu);
+
     return (
         <div className="map-wrapper">
-            {/* MENU OVERLAY */}
+            {/* MENU DYNAMIQUE */}
             <div className="map-menu">
-                <h3>Menu</h3>
-                <button>Action 1</button>
-                <button>Action 2</button>
+                <h3>{activeMenu?.title}</h3>
+
+                {currentMenu !== "main" && (
+                    <button className="back-btn" onClick={goBack}>
+                        ← Retour
+                    </button>
+                )}
+
+                {activeMenu?.items.map((item) => (
+                    <button
+                        key={item}
+                        onClick={() => openMenu(item.toLowerCase())}
+                    >
+                        {item}
+                    </button>
+                ))}
             </div>
 
             <MapContainer
@@ -70,7 +117,6 @@ export default function AgentMap(): JSX.Element {
                     attribution="&copy; OpenStreetMap contributors"
                 />
 
-                {/* Affichage des markers avec icône dynamique */}
                 {MapElements.map((el) => (
                     <Marker
                         key={el.id}
