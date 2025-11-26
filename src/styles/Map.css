@@ -14,7 +14,7 @@
 .map-menu {
     position: absolute;
     top: 20px;
-    left: 60px;
+    right: 30px;
     padding: 15px;
     background: white;
     border-radius: 8px;
