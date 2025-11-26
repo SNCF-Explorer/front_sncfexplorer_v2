@@ -1,6 +1,7 @@
 import React from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import logo from "../assets/logo.png";
 import "../styles/Navbar.css";
 
 export default function Navbar() {
@@ -14,7 +15,9 @@ export default function Navbar() {
 
     return (
         <nav className="navbar">
-            <div className="logo ">LOGO</div>
+            <div className="logo ">
+                <img src={logo} alt="Logo" />
+            </div>
             {user && (
                 <button onClick={handleLogout} className="logoff_button">
                     Déconnexion
